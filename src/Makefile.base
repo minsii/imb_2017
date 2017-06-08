@@ -53,7 +53,8 @@ IMB_rma_put.o IMB_cpu_exploit.o IMB_rma_get.o IMB_rma_atomic.o
 
 
 default: all
-all: IMB-IO  IMB-EXT IMB-MPI1 IMB-NBC IMB-RMA
+#all: IMB-IO  IMB-EXT IMB-MPI1 IMB-NBC IMB-RMA
+all: IMB-MPI1
 
 IMB-MPI1: $(SRC1) IMB_declare.h exe_mpi1
 	$(MAKE) -f Makefile.base MPI1 CPP=MPI1
