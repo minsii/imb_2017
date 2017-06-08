@@ -1,6 +1,6 @@
 /*****************************************************************************
  *                                                                           *
- * Copyright (c) 2003-2016 Intel Corporation.                                *
+ * Copyright (c) 2003-2015 Intel Corporation.                                *
  * All rights reserved.                                                      *
  *                                                                           *
  *****************************************************************************
@@ -71,8 +71,10 @@ For more documentation than found here, see
 #include "IMB_benchmark.h"
 
 #include "IMB_prototypes.h"
+#include "papi_util.h"
 
 extern int num_alloc, num_free;
+PAPI_GLOBAL_DECL;
 
 
 /**********************************************************************/
@@ -154,6 +156,8 @@ Return value          (type int)
 	MPI_Finalize();
 	return 0;
     }
+
+    papi_init(C_INFO.w_num_procs);
 
     /* IMB 3.1 << */
     IMB_show_selections(&C_INFO,BList,&argc,&argv);
@@ -431,6 +435,8 @@ Return value          (type int)
 
     MPI_Barrier(MPI_COMM_WORLD);
     IMB_end_msg(&C_INFO);
+
+    papi_exit();
 
     /* >> IMB 3.1  */
     MPI_Finalize();

@@ -1,6 +1,6 @@
 /*****************************************************************************
  *                                                                           *
- * Copyright (c) 2003-2016 Intel Corporation.                                *
+ * Copyright (c) 2003-2015 Intel Corporation.                                *
  * All rights reserved.                                                      *
  *                                                                           *
  *****************************************************************************
@@ -73,6 +73,9 @@ For more documentation than found here, see
 #include "IMB_benchmark.h"
 
 #include "IMB_prototypes.h"
+
+#include "papi_util.h"
+
 
 /*************************************************************************/
 
@@ -150,6 +153,8 @@ Output variables:
   s_tag = 1;
   r_tag = MPI_ANY_TAG;
   
+  PAPI_START();
+
   if(c_info->rank!=-1)
     {  
       /*  CALCULATE SOURCE AND DESTINATION */  
@@ -167,6 +172,7 @@ Output variables:
                              r_num,c_info->r_data_type,source,r_tag,
 			     c_info->communicator,&stat);
 	  MPI_ERRHAND(ierr);
+
           CHK_DIFF("Sendrecv",c_info,(char*)c_info->r_buffer+i%ITERATIONS->r_cache_iter*ITERATIONS->r_offs,
                     0, size, size, asize,
                     put, 0, ITERATIONS->n_sample, i,
@@ -179,5 +185,8 @@ Output variables:
     { 
       *time = 0.;
     }
+
+    PAPI_STOP();
+    papi_coll_report(c_info->communicator, size);
 }
 

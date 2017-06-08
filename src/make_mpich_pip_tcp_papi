@@ -1,0 +1,28 @@
+# Enter root directory of mpich install
+MPI_HOME=${HOME}/git/mpich-pip/build-tcp-gnu-pip-mdfglibc/install
+PREFIX=${HOME}/workspace/imb-2017/mpich-tcp-pip-mdfglibc-papi/
+
+MPICC=$(shell find ${MPI_HOME} -name mpicc -print)
+
+NULL_STRING :=
+ifneq (,$(findstring /bin/mpicc,${MPICC}))
+MPI_INCLUDE := -I${MPI_HOME}/include
+else
+$(error Variable MPI_HOME="${MPI_HOME}" does not seem to contain a valid mpicc)
+endif
+LIB_PATH    =
+LIBS        = -lpapi
+CC          = ${MPI_HOME}/bin/mpicc 
+OPTFLAGS    = -O3
+CLINKER     = ${CC}
+LDFLAGS     = -L${HOME}/local/lib -Wl,-rpath -Wl,${HOME}/local/lib
+CPPFLAGS    = -DUSE_PAPI -I${HOME}/local/include
+
+IMB-MPI1 = ${PREFIX}/IMB-MPI1
+IMB-EXT  = ${PREFIX}/IMB-EXT
+IMB-IO   = ${PREFIX}/IMB-IO
+IMB-NBC  = ${PREFIX}/IMB-NBC
+IMB-RMA  = ${PREFIX}/IMB-RMA
+
+export MPI_INCLUDE CC LIB_PATH LIBS OPTFLAGS CLINKER LDFLAGS CPPFLAGS IMB-MPI1 IMB-EXT IMB-IO IMB-NBC IMB-RMA
+include Makefile.base
